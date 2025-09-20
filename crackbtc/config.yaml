@@ -1,9 +1,3 @@
-private_keys:
-  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  - Kwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  # ... 继续添加，总共31个私钥
-  # 示例占位符，替换为实际WIF私钥
-  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 targets: 
   bitcoin:
     address: 3DuCr66hbDP5pLQuR663Tp9n355CeLiFti
@@ -12,3 +6,9 @@ targets:
     address: bitcoincash:3NmeohV1BBoPBh1KxDUouGC8z2P8ebxeon
     network: bitcoincash
 amount: 49.99 # 转账金额（BTC和BCH一致，例如0.01 BTC和0.01 BCH）
+private_keys:
+  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - Kwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # ... 继续添加，总共31个私钥
+  # 示例占位符，替换为实际WIF私钥
+  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

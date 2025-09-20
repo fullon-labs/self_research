@@ -4,7 +4,7 @@ from bitcoinlib.keys import KeyError
 import os
 
 # 读取YAML配置文件
-def load_config(file_path='config.yaml'):
+def load_config(file_path='btc_config.yaml'):
     try:
         with open(file_path, 'r') as file:
             config = yaml.safe_load(file)

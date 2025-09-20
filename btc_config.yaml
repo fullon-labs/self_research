@@ -1,0 +1,8 @@
+private_keys:
+  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - Kwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  # ... 继续添加，总共31个私钥
+  # 示例占位符，替换为实际WIF私钥
+  - 5Jxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+target_address: 1YourTargetBitcoinAddressHere
+network: bitcoin

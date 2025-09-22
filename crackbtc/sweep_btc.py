@@ -1,6 +1,6 @@
 import yaml
 from bitcoinlib.wallets import Wallet
-from bitcoinlib.keys import KeyError
+from bitcoinlib.keys import BKeyError
 import os
 
 def load_config(file_path='config.yaml'):
@@ -24,7 +24,7 @@ def create_wallet(wallet_name, network, private_keys):
                 w.import_key(pk)
                 imported_count += 1
                 print(f"[{network}] 成功导入私钥: {pk[:10]}...")
-            except KeyError as e:
+            except BKeyError as e:
                 print(f"[{network}] 导入私钥失败 {pk[:10]}...: {e}")
             except Exception as e:
                 print(f"[{network}] 未知错误导入 {pk[:10]}...: {e}")

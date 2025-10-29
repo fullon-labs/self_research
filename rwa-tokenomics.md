@@ -126,7 +126,7 @@ stateDiagram-v2
 
     note right of closed
         硬顶达成
-        通道关闭，等待结算
+        通道关闭，等待担保人质押完成
         必将 success
     end note
 

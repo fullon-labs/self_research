@@ -78,8 +78,9 @@ stateDiagram-v2
         退款完成
         资金已退回
     end note
-```
+
     note right of completed
         回报周期结束
         不再分配收益
     end note
+```

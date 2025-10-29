@@ -84,3 +84,65 @@ stateDiagram-v2
         不再分配收益
     end note
 ```
+
+```mermaid
+stateDiagram-v2
+    [*] --> pending
+
+    pending --> active : start_time
+    pending --> cancelled : cancelplan()
+
+    active --> closed : raised >= hard_cap
+    active --> cancelled : cancelplan()
+
+    %% 募资结束 → 等待抵押
+    closed --> pendingpldge : end_time + 抵押未完成
+    closed --> success : end_time + 抵押已完成
+
+    active --> pendingpldge : end_time + 抵押未完成
+    active --> success : end_time + 抵押已完成 + raised >= soft_cap
+    active --> failed : end_time + 抵押已完成 + raised < soft_cap
+
+    %% 担保人抵押 → 最终结算
+    pendingpldge --> success : confirmpledge() + raised >= soft_cap
+    pendingpldge --> failed  : confirmpledge() + raised < soft_cap
+
+    success --> completed : return_end_time
+    failed --> refunded
+    cancelled --> refunded
+    refunded --> [*]
+    completed --> [*]
+
+ %% 注释
+    note right of pending
+        创建后等待开始
+        creator 可取消
+    end note
+
+    note right of active
+        募资进行中
+        可投资、可取消
+    end note
+
+    note right of closed
+        硬顶达成
+        通道关闭，等待结算
+        必将 success
+    end note
+
+    note right of cancelled
+        创建人主动取消
+        仅限 pending/active/closed
+    end note
+
+    note right of refunded
+        退款完成
+        资金已退回
+    end note
+
+    note right of completed
+        回报周期结束
+        不再分配收益
+    end note
+```
+

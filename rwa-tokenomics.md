@@ -21,6 +21,7 @@ graph TD
     E -->|部分收益| H
 ```
 
+
 ```mermaid
 stateDiagram-v2
     [*] --> pending : createplan()
@@ -31,91 +32,34 @@ stateDiagram-v2
 
     %% 2. 募资进行中
     active --> closed : raised >= hard_cap<br/>（软顶必然达成）
-    active --> active : 投资中...
     active --> cancelled : creator.cancelplan()
 
-    %% 3. 硬顶关闭（等待截止）
-    closed --> success : end_time 到<br/>（直接成功，无需再判软顶）
+    %% 3. 募资截止 → 进入 pendingpldge（等待质押）
+    closed --> pendingpldge : now > end_time
+    active --> pendingpldge : now > end_time
 
-    %% 4. 正常截止结算
-    active --> success : end_time 到 + raised >= soft_cap
-    active --> failed : end_time 到 + raised < soft_cap
+    %% 4. 质押处理（必须在 end_time 前）
+    pendingpldge --> success : confirmpledge()<br/>+ raised >= soft_cap<br/>+ now <= end_time
+    pendingpldge --> failed  : confirmpledge()<br/>+ raised < soft_cap<br/>+ now <= end_time
 
-    %% 5. 取消与失败 → 退款
-    cancelled --> refunded : 自动退款
-    failed --> refunded : 自动退款
-    refunded --> [*]
+    %% 5. 质押超时 → 自动失败
+    pendingpldge --> failed : now > end_time<br/>（未质押）
 
     %% 6. 成功 → 回报 → 完结
-    success --> completed : return_end_time 到<br/>returns_finished = true
+    success --> completed : now >= return_end_time<br/>returns_finished = true
     success --> success : 分配收益（8~10年）
 
-    completed --> [*]
-
-    %% 注释
-    note right of pending
-        创建后等待开始
-        creator 可取消
-    end note
-
-    note right of active
-        募资进行中
-        可投资、可取消
-    end note
-
-    note right of closed
-        硬顶达成
-        通道关闭，等待结算
-        必将 success
-    end note
-
-    note right of cancelled
-        创建人主动取消
-        仅限 pending/active/closed
-    end note
-
-    note right of refunded
-        退款完成
-        资金已退回
-    end note
-
-    note right of completed
-        回报周期结束
-        不再分配收益
-    end note
-```
-
-```mermaid
-stateDiagram-v2
-    [*] --> pending
-
-    pending --> active : start_time
-    pending --> cancelled : cancelplan()
-
-    active --> closed : raised >= hard_cap
-    active --> cancelled : cancelplan()
-
-    %% 募资结束 → 等待抵押
-    closed --> pendingpldge : end_time + 抵押未完成
-    closed --> success : end_time + 抵押已完成
-
-    active --> pendingpldge : end_time + 抵押未完成
-    active --> success : end_time + 抵押已完成 + raised >= soft_cap
-    active --> failed : end_time + 抵押已完成 + raised < soft_cap
-
-    %% 担保人抵押 → 最终结算
-    pendingpldge --> success : confirmpledge() + raised >= soft_cap
-    pendingpldge --> failed  : confirmpledge() + raised < soft_cap
-
-    success --> completed : return_end_time
-    failed --> refunded
-    cancelled --> refunded
+    %% 7. 失败/取消 → 退款
+    failed --> refunded : 自动退款
+    cancelled --> refunded : 自动退款
     refunded --> [*]
+
+    %% 8. 完结
     completed --> [*]
 
- %% 注释
+    %% 注释说明
     note right of pending
-        创建后等待开始
+        计划创建
         creator 可取消
     end note
 
@@ -126,12 +70,26 @@ stateDiagram-v2
 
     note right of closed
         硬顶达成
-        通道关闭，等待担保人质押完成
-        必将 success
+        通道关闭，等待 end_time
+    end note
+
+    note right of pendingpldge
+        募资结束，等待担保人质押
+        必须在 end_time 前完成
+    end note
+
+    note right of success
+        募资成功 + 质押到位
+        开始 8~10 年回报
+    end note
+
+    note right of failed
+        未达软顶 或 质押超时
+        自动退款
     end note
 
     note right of cancelled
-        创建人主动取消
+        creator 主动取消
         仅限 pending/active/closed
     end note
 
